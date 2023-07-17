@@ -7,7 +7,7 @@ from flask import render_template, flash, redirect, request, session, url_for
 from werkzeug.urls import url_parse
 from config import Config
 from FlaskWebProject import app, db
-from FlaskWebProject.forms import LoginForm, PostForm
+from FlaskWebProject.forms import LoginForm, PostForm, RemoveImage
 from flask_login import current_user, login_user, logout_user, login_required
 from FlaskWebProject.models import User, Post
 import msal
@@ -66,14 +66,14 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            app.logger.warning('Invalid username or password', user.username)
+            app.logger.warning('[%s] Invalid username or password', user.username)
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
-            app.logger.info('Login successfully!', user.username)
+            app.logger.info('[%s] Login successfully!', user.username)
         return redirect(next_page)
     session["state"] = str(uuid.uuid4())
     auth_url = _build_auth_url(scopes=Config.SCOPE, state=session["state"])
@@ -123,7 +123,7 @@ def _load_cache():
 
 def _save_cache(cache):
     # TODO: Save the cache, if it has changed
-    app.logger.info('Cache saved')
+    app.logger.info('%s cache saved', cache)
     pass
 
 def _build_msal_app(cache=None, authority=None):
