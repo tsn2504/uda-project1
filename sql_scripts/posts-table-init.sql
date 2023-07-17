@@ -1,6 +1,7 @@
 CREATE TABLE POSTS(
     id INT NOT NULL IDENTITY(1, 1),
     title VARCHAR(150) NOT NULL,
+    subtitle VARCHAR(150) NOT NULL,
     author VARCHAR(75) NOT NULL,
 	body VARCHAR(800) NOT NULL,
 	image_path VARCHAR(100) NULL,
@@ -10,7 +11,7 @@ CREATE TABLE POSTS(
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-INSERT INTO dbo.posts (title, author, body, user_id)
+INSERT INTO dbo.posts (title, subtitle, author, body, user_id)
 VALUES (
     'Lorem ipsum dolor sit amet',
     'John Smith',
